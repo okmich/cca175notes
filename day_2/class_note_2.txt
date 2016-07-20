@@ -1,0 +1,115 @@
+--create a database 
+create database cca175db;
+
+--creating a managed table
+create table customers_mgd (
+	id int,
+	fname string,
+	lname string,
+	email string,
+	password string,
+	address string,
+	city string,
+	state string,
+	zipcode string
+)
+row format delimited
+fields terminated by '\t';
+
+-- creating an external table
+create external table customers_ext (
+	id int,
+	fname string,
+	lname string,
+	email string,
+	password string,
+	address string,
+	city string,
+	state string,
+	zipcode string
+)
+row format delimited
+fields terminated by '\t'
+location '/user/cloudera/output/retail_db/customers_text';
+
+-- rename a hive table
+alter table customers_ext rename to customers_external;
+
+--creating a hive table from a avro data file and an avro schema
+create external table orders_avro (
+	order_id int,
+	order_date string,
+	order_customer_id int,
+	order_status string
+)
+stored as avro
+location '/user/cloudera/output/retail_db/orders_avro'
+tblproperties('avro.schema.url'='/user/cloudera/output/retail_db/schema/orders.avsc');
+
+
+
+Problem formulation
+======================
+The customer_mgd table in the cca175db database is in text format.
+Create a new table called customer_avro that includes all records from the customer_mgd table but in avro.
+
+Solution
+=========
+(keep in view for day 4)
+
+
+
+
+Problem formulation
+======================
+The customer_mgd table in the cca175db database is in text format.
+Create a new table called customer_parquet that includes all records from the customer_mgd table but in parquet.
+
+Solution
+===============
+1. create a customer_mgd-replica in parquet format
+	create external table customer_parquet like customers_mgd
+	stored as parquet
+    	location '/user/cloudera/output/retail_db/customer_parquet';
+2. Copy all data from customer_mgd to customer_parquet;
+	insert overwrite table customer_parquet select * from customers_mgd;
+
+
+TABLE PARTITIONING
+=========================
+Problem formulation
+===================
+Create a table called customer_part containing all records and fields of customer_mgd but partitioned by state.
+
+Solution
+===============
+1. Create a partitioned table
+create external table customers_part (
+	id int,
+	fname string,
+	lname string,
+	email string,
+	password string,
+	address string,
+	zipcode string
+)
+partitioned by (state string, city string)
+row format delimited
+fields terminated by '\t'
+location '/user/cloudera/output/retail_db/customers_part';
+
+2. Enable dynamic partition
+set hive.exec.dynamic.partition.mode=nonstrict
+
+3. Copy records from non-partitioned table to the partitioned one.
+insert into customers_part partition(state, city)
+select id, fname, lname, email, password, address, zipcode, state, city from customers_mgd;
+
+
+
+Problem Formulation (Hive + Sqoop)
+==========================================
+Run this query on your retail_db schema
+create table order_item_2 as  select * from order_items where 1 =2 ;
+alter table order_item_2 drop order_item_order_id;
+Now export all records from /user/cloudera/classwork/retail_db/order_item into the database table order_item_2

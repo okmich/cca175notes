@@ -1,0 +1,31 @@
+{
+  "type" : "record",
+  "name" : "countrylanguage",
+  "doc" : "Sqoop import of countrylanguage",
+  "fields" : [ {
+    "name" : "CountryCode",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "CountryCode",
+    "sqlType" : "1"
+  }, {
+    "name" : "Language",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "Language",
+    "sqlType" : "1"
+  }, {
+    "name" : "IsOfficial",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "IsOfficial",
+    "sqlType" : "1"
+  }, {
+    "name" : "Percentage",
+    "type" : [ "null", "float" ],
+    "default" : null,
+    "columnName" : "Percentage",
+    "sqlType" : "7"
+  } ],
+  "tableName" : "countrylanguage"
+}

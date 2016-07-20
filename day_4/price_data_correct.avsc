@@ -1,0 +1,37 @@
+{
+  "type" : "record",
+  "name" : "price_data",
+  "doc" : "Hand created avro schema for price_data",
+  "fields" : [ {
+    "name" : "year",
+    "type" : "int"
+  },{
+    "name" : "month",
+    "type" : "int"
+  },{
+    "name" : "day",
+    "type" : "int"
+  },{
+    "name" : "hour",
+    "type" : "int"
+  },{
+    "name" : "min",
+    "type" : "int"
+  }, {
+    "name" : "open",
+    "type" : ["null", "int"]
+  }, {
+    "name" : "high",
+    "type" : [ "null", "float" ]
+  }, {
+    "name" : "low",
+    "type" : [ "null", "float" ]
+  }, {
+    "name" : "close",
+    "type" : [ "null", "float" ]
+  }, {
+    "name" : "sym",
+    "type" : "string"
+  } ],
+  "tableName" : "price_data_avro"
+}

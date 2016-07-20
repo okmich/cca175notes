@@ -1,0 +1,97 @@
+{
+  "type" : "record",
+  "name" : "country",
+  "doc" : "Sqoop import of country",
+  "fields" : [ {
+    "name" : "Code",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "Code",
+    "sqlType" : "1"
+  }, {
+    "name" : "Name",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "Name",
+    "sqlType" : "1"
+  }, {
+    "name" : "Continent",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "Continent",
+    "sqlType" : "1"
+  }, {
+    "name" : "Region",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "Region",
+    "sqlType" : "1"
+  }, {
+    "name" : "SurfaceArea",
+    "type" : [ "null", "float" ],
+    "default" : null,
+    "columnName" : "SurfaceArea",
+    "sqlType" : "7"
+  }, {
+    "name" : "IndepYear",
+    "type" : [ "null", "int" ],
+    "default" : null,
+    "columnName" : "IndepYear",
+    "sqlType" : "5"
+  }, {
+    "name" : "Population",
+    "type" : [ "null", "int" ],
+    "default" : null,
+    "columnName" : "Population",
+    "sqlType" : "4"
+  }, {
+    "name" : "LifeExpectancy",
+    "type" : [ "null", "float" ],
+    "default" : null,
+    "columnName" : "LifeExpectancy",
+    "sqlType" : "7"
+  }, {
+    "name" : "GNP",
+    "type" : [ "null", "float" ],
+    "default" : null,
+    "columnName" : "GNP",
+    "sqlType" : "7"
+  }, {
+    "name" : "GNPOld",
+    "type" : [ "null", "float" ],
+    "default" : null,
+    "columnName" : "GNPOld",
+    "sqlType" : "7"
+  }, {
+    "name" : "LocalName",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "LocalName",
+    "sqlType" : "1"
+  }, {
+    "name" : "GovernmentForm",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "GovernmentForm",
+    "sqlType" : "1"
+  }, {
+    "name" : "HeadOfState",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "HeadOfState",
+    "sqlType" : "1"
+  }, {
+    "name" : "Capital",
+    "type" : [ "null", "int" ],
+    "default" : null,
+    "columnName" : "Capital",
+    "sqlType" : "4"
+  }, {
+    "name" : "Code2",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "columnName" : "Code2",
+    "sqlType" : "1"
+  } ],
+  "tableName" : "country"
+}

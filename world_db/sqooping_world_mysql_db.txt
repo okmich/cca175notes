@@ -1,0 +1,50 @@
+sqoop-import-all-tables --connect jdbc:mysql://192.168.20.2/world --username root  --password-file /user/hadmin/rawdata/world.db/password.file --as-avrodatafile --warehouse-dir /user/hadmin/rawdata/world.db --driver com.mysql.jdbc.Driver -m 1
+
+--- I move all the resulting schema avsc files to a folder schema-files in rawadata/world.db
+
+create external table city (id int,	name string,countrycode string,district string,	population int)
+stored as avro location '/user/hadmin/rawdata/world.db' 
+tblproperties('avro.schema.url'='hdfs:///user/hadmin/rawdata/world.db/schema-files/city.avsc')
+
+
+
+create external table countrylanguage (countrycode string,language string,isofficial string,percentage float)
+stored as avro location '/user/hadmin/rawdata/world.db/countrylanguage'
+tblproperties('avro.schema.url'='/user/hadmin/rawdata/world.db/schema-files/countrylanguage.avsc')
+
+
+create external table country(
+code string, name string, continent string, region string, surfaceArea float, independentYear int, 
+population int, lifeExpectancy float, GNP float, GNPOld float, localName string, GovernmentForm string,
+HeadOfState string, Capital int, Code2 string)
+stored as avro
+location '/user/hadmin/rawdata/world.db/country'
+tblproperties('avro.schema.url'='/user/hadmin/rawdata/world.db/schema-files/country.avsc')
+
+
+
+create external table countrylanguage2 (countrycode string,language string,isofficial string,percentage float)
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
+STORED AS INPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat'
+location '/user/hadmin/rawdata/world.db/countrylanguage'
+tblproperties('avro.schema.url'='/user/hadmin/rawdata/world.db/schema-files/countrylanguage.avsc')
+
+
+--some queries to play with
+
+-- get the countries with the earliest independence year for each continents
+select code, name, indepyear, continent from country c join (select min(indepyear) iy, continent ic from country group by continent) t 
+on t.iy = c.indepyear and t.ic = c.continent
+
+--return the top 20 densiest countries in the world
+select code, name , surfacearea, population, population/surfacearea density from country order by density desc limit 20;
+
+--return all continents in the descending order of density
+select continent, sum(population) population,sum(surfacearea) surfacearea, sum(population)/sum(surfacearea) density from country group by continent order by density desc
+
+--return each country with the number of language spoken and a list of all the spoken languages
+select code, name, continent, size(cl.langs) number_of_languages, cl.langs languagess from country c join 
+(select countrycode, collect_set(language) langs from countrylanguage group by countrycode) cl 
+on cl.countrycode = c.code
+order by size(cl.langs) desc

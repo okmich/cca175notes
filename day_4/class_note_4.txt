@@ -1,0 +1,69 @@
+AVRO TOOLS
+==========================
+## to extract an avro schema from an avro data file use
+avro-tools getschema avro_filename.avro
+
+## the example below extracts the schema from the 000004_0 file accompanied with this note.
+avro-tools getschema avro_data_file/000004_0
+
+## to extract an avro schema from an avro data file use into a schema file
+avro-tools getschema avro_filename.avro > avro_schema_file.avsc
+
+## example will be 
+avro-tools getschema avro_data_file/000004_0 > price_data_schema.avsc
+
+## use then use the HUE web interface or the hdfs to import price_data_schema.avsc to hdfs
+## hdfs command to load the price_data_schema.avsc file to hdfs
+hdfs dfs -put price_data_schema.avsc /user/cloudera/rawdata/hist_forex/schema
+
+
+EVOLVING AN AVRO SCHEMA
+===============================
+## Now we have an avro table price_data_avro that we created in day 2. This table is backed with an avro schema file in /user/cloudera/rawdata/hist_forex/price_data.avsc
+## Now we will replace the price_data.avsc with the one provided in the folder for day_4 by running the two commands below
+hdfs dfs -rm /user/cloudera/rawdata/hist_forex/schema/price_data.avsc
+hdfs dfs -put price_data.avsc /user/cloudera/rawdata/hist_forex/schema
+
+## With the new schema, we will now run the query below
+select sym, avg(open) avg_open, avg(high) avg_high, avg(low) avg_low, avg(close) avg_close
+from price_data_avro
+where year = 2012
+group by sym
+
+Outcome: Hive reports an error while trying to execute the MapReduceTask.
+
+## Now we will edit the price_data.avsc file so that we can run the query without error
+## There are two ways
+## Either edit the schema file locally and copy to hdfs
+## Or use the HUE web console to open the schema file for edit.
+
+## Use the content of the price_data_correct.avsc to replace the content of the price_data.avsc
+## In summary, we have change the following portion of the json schema file 
+  }, {
+    "name" : "open",
+    "type" : "string"
+  }, {
+
+ to 
+  }, {
+    "name" : "open",
+    "type" : ["null", "float"]
+  }, {
+
+## Now return the query
+
+#Outcome: Query runs without error
+
+
+
+COMMAND TO RUN A FLUME AGENT
+================================
+#format
+flume-ng agent --name <agent_name> --conf-file <flume_configurtion_filename>
+
+#example
+flume-ng agent --name ac --conf-file flume/ac_config.properties
+
+# Note::
+- Change the property of ac.sources.sc1.spoolDir in the  flume/ac_config.properties to reflect the watch folder path provided with this class note.
+- Ensure that the path specified in ac.sinks.sk1.hdfs.path property exists in your hdfs. 
