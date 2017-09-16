@@ -1,0 +1,67 @@
+jdbc:mysql://<server>:<port>/<db_name>
+
+--server - the name of the gateway server
+--port - unless you are told otherwise, use 3306
+--db_name - the name of the database you are reading from
+
+- confirm database server - mysql -h localhost -u root -p (on prompt enter, cloudera)
+- confirm schema	- run "show databases". Then "use retail_db"
+- confirm table		- run "show tables".
+- confirm table columns - run "desc customers"
+
+Problem formulation
+=====================
+Import all customer record from the customers table in retail_db mysql database into HDFS path "/user/cloudera/output/retail_db/customers_text".
+Fields should be tab delimited and all records must be imported into a single text file
+
+Solution
+==================
+sqoop-import --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --username root --target-dir /user/cloudera/output/retail_db/customers_text --table customers --fields-terminated-by '\t' --num-mappers 1 --password cloudera
+
+
+
+Problem formulation
+=====================
+Import all CLOSED customer orders  from the orders table in retail_db mysql database into HDFS path "/user/cloudera/output/retail_db/orders_avro".
+Records must be imported in avro format.
+All imported records must be CLOSED orders.
+
+Solution
+====================
+sqoop-import --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --username root --target-dir /user/cloudera/output/retail_db/orders_avro --table orders --as-avrodatafile --where "order_status = 'CLOSED'" -P
+
+
+
+Problem formulation
+=====================
+Import all order_items from the order_items and product tables in retail_db mysql database into HDFS path "/user/cloudera/output/retail_db/denorm_order_items".
+The imported dataset must contain the following columns in this order: order_item_id, order_item_order_id, product_name, product_category_id, product_price, order_item_quantity, order_item_subtotal
+Records must be imported in parquet format.
+
+Solution
+====================
+
+
+Problem
+====================
+Export all record from HDFS location "/user/cloudera/rawdata/hist_forex/price_data" to the database table price_data in schema hist_forex;
+
+Solution
+====================
+sqoop-export --connect jdbc:mysql://quickstart.cloudera:3306/hist_forex --username root --export-dir /user/cloudera/rawdata/hist_forex/price_gap_data_fixed --table price_gap_1 --input-fields-terminated-by '|' --columns "gap,open,close,sym"   -P
+
+
+Exercise formulation
+====================
+1. Import all the records from the table order_items in the retail_db schema.
+Fields should be delimited by tabs
+Files should be compressed and located at /user/cloudera/classwork/retail_db/order_item
+
+Solution
+=====
+sqoop-import --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --username root --target-dir /user/cloudera/output/retail_db/order_item --table order_items --fields-terminated-by '\t' --compress -P
+
+2. Run this query on your retail_db schema
+create table order_item_2 as  select * from order_items where 1 =2 ;
+alter table order_item_2 drop order_item_order_id;
+Now export all records from /user/cloudera/classwork/retail_db/order_item into the database table order_item_2
