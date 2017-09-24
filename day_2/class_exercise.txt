@@ -1,3 +1,6 @@
+-- download the files in the location https://drive.google.com/drive/folders/0B0MdkEsxQHAQeFB6WHMzWEx6eGM?usp=sharing
+-- download price_data.txt and price_gap_data.txt
+
 Scenario: You are provided with two files in a local drive. Create copies of each file in their respective folders on hdfs.
 
 (Objective) Load data into and out of HDFS using the Hadoop File System (FS) commands (Note that this is not important for the exam as the files will already by provided for you and you always have HUE web console to help you will the utility functions)
