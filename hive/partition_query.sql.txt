@@ -1,0 +1,8 @@
+create table part_country (code string, name string, region string, population float) partitioned by (continent string)
+row format delimited fields terminated by '||' 
+
+
+
+insert overwrite table part_country partition (continent = "Europe") select code, name, "", region, population from country where continent = "Europe";
+
+insert overwrite table part_country partition (continent) select code, name, "", region, population, continent from country;

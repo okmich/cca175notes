@@ -1,2 +1,0 @@
-# create folders in hdfs 
-hdfs dfs -mkdir -p /user/cloudera/exam/folder/question1 

@@ -1,0 +1,29 @@
+-- download the file https://drive.google.com/open?id=0B0MdkEsxQHAQT08zRGh3UVhKRGc called price_data.txt
+
+
+-- creating a table like the raw_price_data
+create external table pq_price_data (datetimestamp string, open float, high float, low float, close float, volume int, sym string)
+stored as parquet
+location '/user/cloudera/rawdata/hist_forex/price_data_partquet';
+
+--inserting raw_price_data data into this table in another format
+insert overwrite table pq_price_data
+select * from raw_price_data
+
+create external table av_price_data (datetimestamp string, open float, high float, low float, close float, volume int, sym string)
+stored as avro
+location '/user/cloudera/rawdata/hist_forex/price_data_avro';
+
+
+insert overwrite table av_price_data
+select * from raw_price_data
+
+
+create external table solution
+row format delimited
+fields terminated by ','
+location '/user/cloudera/rawdata/hist_forex/aggregated_query'
+as 
+select sym, max(high-low) volatility from pq_price_data
+group by sym
+order by sym

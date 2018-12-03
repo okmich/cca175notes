@@ -1,1 +1,0 @@
-flume-ng agent --name ac --conf-file ac_config.properties

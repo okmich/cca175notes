@@ -1,0 +1,1 @@
+flume-ng agent -C /usr/lib/flume-ng/lib/ --conf-file twitter-stream-config.properties --name TwitterAgent

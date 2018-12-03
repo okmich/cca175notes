@@ -1,0 +1,48 @@
+PROBLEM FORMULA
+=======================
+Data dumps from a trading system is periodically downloads to flat files at a shared location /home/cloudera/Downloads/shared_files.
+Write a system that transfers all the files downloaded to the share folder to a hdfs location /user/cloudera/output/flume/price_data with the following properties.
+- The size of each file in the final destination should not exceed one hdfs block size
+- Files could rollover every 5 mins
+- Each file should not contain more than 100000 records
+- All files in the final location should have their file names prefixed with trade_data
+- All transfered files should be in the format that they were read
+- No data loss should be allowed even with restart of the transfering system
+- Files should be read by oldest first 
+- No duplicates during transfer of data
+- Your submission for data transfer should be left running even after the exams ends
+- You can delete all files from the shared folder after they have been successfully read
+
+
+Solution (Flume Agent)
+==========================
+exam.sources=src
+exam.channels=ch
+exam.sinks=snk
+
+exam.sources.src.type=spooldir
+exam.sources.src.channels=ch
+exam.sources.src.spoolDir=/home/cloudera/Downloads/spooldir
+exam.sources.src.deletePolicy=immediate
+exam.sources.src.consumeOrder=oldest
+
+
+exam.channels.ch.type=file
+exam.channels.ch.checkpointDir=/home/cloudera/filechannel/exam/michael/checkpointDir
+exam.channels.ch.dataDirs=/home/cloudera/filechannel/exam/michael/dataDirs
+
+
+exam.sinks.snk.type=hdfs
+exam.sinks.snk.channel=ch
+exam.sinks.snk.hdfs.path=/user/cloudera/output/flume/testfiles
+exam.sinks.snk.hdfs.rollSize=0
+exam.sinks.snk.hdfs.rollInterval=0
+exam.sinks.snk.hdfs.rollCount=500
+exam.sinks.snk.hdfs.filePrefix=trade_data
+exam.sinks.snk.hdfs.fileType=DataStream
+exam.sinks.snk.hdfs.writeFormat=Text
+
+
+
+WHENEVER YOU HAVE A FLUME ASSIGNMENT
+Back up your data first.
