@@ -1,0 +1,4 @@
+gunzip world.sql.gz
+
+mysql -u root -p < world.sql 
+# password is cloudera

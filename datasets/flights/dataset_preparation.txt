@@ -1,0 +1,15 @@
+wget http://stat-computing.org/dataexpo/2009/2007.csv.bz2
+wget http://stat-computing.org/dataexpo/2009/carriers.csv
+wget http://stat-computing.org/dataexpo/2009/airports.csv
+
+
+hdfs dfs -mkdir -p /user/cloudera/rawdata/flight_dataset/flight
+hdfs dfs -mkdir -p /user/cloudera/rawdata/flight_dataset/airports
+hdfs dfs -mkdir -p /user/cloudera/rawdata/flight_dataset/carrier
+
+bzip2 -d 2007.csv.bz2 
+
+hdfs dfs -moveFromLocal 2007.csv /user/cloudera/rawdata/flight_dataset/flight
+hdfs dfs -moveFromLocal airports.csv /user/cloudera/rawdata/flight_dataset/airports
+hdfs dfs -moveFromLocal carriers.csv /user/cloudera/rawdata/flight_dataset/carrier
+

@@ -1,0 +1,9 @@
+-- Open the google drive folder in the location https://drive.google.com/drive/folders/0B0MdkEsxQHAQeFB6WHMzWEx6eGM?usp=sharing
+-- download price_data.txt and price_gap_data.txt
+
+hdfs dfs -mkdir -p /user/cloudera/rawdata/hist_forex/price_data
+hdfs dfs -mkdir -p /user/cloudera/rawdata/hist_forex/gap_data
+
+#copy the data files from your local drive to hdfs
+hdfs dfs -moveFromLocal all_price_data.txt /user/cloudera/rawdata/hist_forex/price_data
+hdfs dfs -moveFromLocal price_gap_data.txt /user/cloudera/rawdata/hist_forex/gap_data
